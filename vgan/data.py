@@ -6,12 +6,13 @@ import cv2
 
 img_len = 64
 
-def get_maps(imdb):
+def get_maps(imdb, random=True):
     maps = imdb
-    np.random.seed(1234)
-    p = np.random.permutation(len(maps))
     X = np.array(maps)
-    X = X[p]
+    if random:
+        np.random.seed(1234)
+        p = np.random.permutation(len(maps))
+        X = X[p]
     X = np.asarray([cv2.resize(x, (img_len, img_len)) for x in X])
 
     X = X.astype(np.float32)/(255.0/2) - 1.0

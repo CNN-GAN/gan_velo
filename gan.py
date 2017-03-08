@@ -44,6 +44,8 @@ def main():
         print 'Load model G from ', modG_prefix, ' epoch ', modG_epoch
         print 'Load model D from ', modD_prefix, ' epoch ', modD_epoch
 
+    print symD.tojson()
+    return
     #mx.viz.plot_network(symG, shape={'rand': (batch_size, 100, 1, 1)}).view()
     #mx.viz.plot_network(symD, shape={'data': (batch_size, nc, 64, 64)}).view()
 

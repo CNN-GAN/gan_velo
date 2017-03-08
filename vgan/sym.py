@@ -77,4 +77,6 @@ def sym_D(ndf, no_bias=True, fix_gamma=True, eps=1e-5 + 1e-12):
     dbn4 = BatchNorm(d4, name='dbn4', fix_gamma=fix_gamma, eps=eps)
     dact4 = mx.sym.LeakyReLU(dbn4, name='dact4', act_type='leaky', slope=0.2)
 
-    return dact4
+    pool = mx.symbol.Pooling(data=dact4, pool_type="max", kernel=(4, 4), stride=(4, 4), name="pool")
+
+    return pool
