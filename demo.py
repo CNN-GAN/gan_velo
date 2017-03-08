@@ -4,6 +4,7 @@ import logging
 import cv2
 import os
 import sys
+import csv
 from datetime import datetime
 sys.path.append('vgan')
 
@@ -38,9 +39,5 @@ modD.set_params(arg_params, aux_params)
 # ===================Estimate Feature=======================
 for t, batch in enumerate(test_iter):
     modD.forward(batch, is_train=False)
-    feature = str(modD.get_outputs()[0].asnumpy().reshape(1, -1))
-    feature = feature[2:-2]
-
-    file_feature = open('data/loam/results/%04d.txt'%t, 'w')
-    file_feature.write(feature + '\n')
-    file_feature.close()
+    feature = modD.get_outputs()[0].asnumpy().reshape(-1, 16)
+    np.savetxt('data/loam/results/%04d.txt'%t, feature)
