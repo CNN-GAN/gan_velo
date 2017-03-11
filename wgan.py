@@ -15,7 +15,7 @@ from util import fill_buf, visual
 def main():
 
     logging.basicConfig(level=logging.DEBUG)
-        
+    
     # =============setting============
     dataset = 'loam'
     imgnet_path = './train.rec'
@@ -38,17 +38,16 @@ def main():
     if not resume:
         with open('model/symD.json', 'wb') as f:
             cPickle.dump(symD.tojson(), f, cPickle.HIGHEST_PROTOCOL)
-        with open('model/symG.json', 'wb') as f:
-            cPickle.dump(symG.tojson(), f, cPickle.HIGHEST_PROTOCOL)
-    else:
-        print 'Load model G from ', modG_prefix, ' epoch ', modG_epoch
-        print 'Load model D from ', modD_prefix, ' epoch ', modD_epoch
+            with open('model/symG.json', 'wb') as f:
+                cPickle.dump(symG.tojson(), f, cPickle.HIGHEST_PROTOCOL)
+            else:
+                print 'Load model G from ', modG_prefix, ' epoch ', modG_epoch
+                print 'Load model D from ', modD_prefix, ' epoch ', modD_epoch
 
     #print symD.tojson()
     #mx.viz.plot_network(symG, shape={'rand': (batch_size, 100, 1, 1)}).view()
-    mx.viz.plot_network(symD, shape={'data': (batch_size, nc, 64, 64)}).view()
+    #mx.viz.plot_network(symD, shape={'data': (batch_size, nc, 64, 64)}).view()
 
-    return
     # =======================data================================
     imdb = loamBatch(name='loam').gt_imdb()
     X_train, X_test = get_maps(imdb)
@@ -99,11 +98,11 @@ def main():
     # =================printing===================
     def norm_stat(d):
         return mx.nd.norm(d)/np.sqrt(d.size)
-    mon = mx.mon.Monitor(10, norm_stat, pattern=".*output|d1_backward_data", sort=True)
-    mon = None
-    if mon is not None:
-        for mod in mods:
-            pass
+        mon = mx.mon.Monitor(10, norm_stat, pattern=".*output|d1_backward_data", sort=True)
+        mon = None
+        if mon is not None:
+            for mod in mods:
+                pass
 
     def facc(label, pred):
         pred = pred.ravel()

@@ -15,6 +15,7 @@ def get_maps(imdb, random=True):
         X = X[p]
     X = np.asarray([cv2.resize(x, (img_len, img_len)) for x in X])
 
+    # change to [-1, 1]
     X = X.astype(np.float32)/(255.0/2) - 1.0
     X = X.reshape((-1, 1, img_len, img_len))
     X = np.tile(X, (1, 3, 1, 1))
