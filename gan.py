@@ -48,7 +48,6 @@ def main():
     #mx.viz.plot_network(symG, shape={'rand': (batch_size, 100, 1, 1)}).view()
     mx.viz.plot_network(symD, shape={'data': (batch_size, nc, 64, 64)}).view()
 
-    return
     # =======================data================================
     imdb = loamBatch(name='loam').gt_imdb()
     X_train, X_test = get_maps(imdb)

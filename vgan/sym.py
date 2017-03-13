@@ -45,12 +45,6 @@ def make_dcgan_sym(ngf, ndf, nc, no_bias=True, fix_gamma=True, eps=1e-5 + 1e-12)
     d4 = mx.sym.Convolution(dact3, name='d4', kernel=(4,4), stride=(2,2), pad=(1,1), num_filter=ndf*8, no_bias=no_bias)
     dbn4 = BatchNorm(d4, name='dbn4', fix_gamma=fix_gamma, eps=eps)
     dact4 = mx.sym.LeakyReLU(dbn4, name='dact4', act_type='leaky', slope=0.2)
-    
-    '''
-    d5 = mx.sym.Convolution(dact4, name='d5', kernel=(4,4), stride=(2,2), pad=(1,1), num_filter=ndf*16, no_bias=no_bias)
-    dbn5 = BatchNorm(d5, name='dbn5', fix_gamma=fix_gamma, eps=eps)
-    dact5 = mx.sym.LeakyReLU(dbn5, name='dact5', act_type='leaky', slope=0.2)
-    '''
 
     d5 = mx.sym.Convolution(dact4, name='d5', kernel=(4,4), num_filter=1, no_bias=no_bias)
     d5 = mx.sym.Flatten(d5)
