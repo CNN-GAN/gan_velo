@@ -69,9 +69,8 @@ def main():
 
     #mx.viz.plot_network(encoder, shape={'data': (batch_size, 3, 64, 64)}).view()
     #mx.viz.plot_network(decoder, shape={'rand': (batch_size, 128, 1, 1)}).view()
-    mx.viz.plot_network(disc, shape={'data_x': (batch_size, 3, 64, 64), 'data_z': (batch_size, 128, 1, 1)}).view()
+    #mx.viz.plot_network(disc, shape={'data_x': (batch_size, 3, 64, 64), 'data_z': (batch_size, 128, 1, 1)}).view()
 
-    return
     # =======================data================================
     imdb = loamBatch(name='loam').gt_imdb()
     X_train, X_test = get_maps(imdb)
@@ -131,10 +130,12 @@ def main():
             label[:] = 1
             modDC.forward(mx.io.DataBatch(batch.data+outEX, [label]), is_train=True)
             modDC.backward()
-            for gradsr, gradsf in zip(modDC._exec_group.grad_arrays, gradDC):
-                for gradr, gradf in zip(gradsr, gradsf):
-                    gradr += gradf
-                    modDC.update()
+            if t%2 == 0:
+                for gradsr, gradsf in zip(modDC._exec_group.grad_arrays, gradDC):
+                    for gradr, gradf in zip(gradsr, gradsf):
+                        gradr += gradf
+                        modDC.update()
+
             modDC.update_metric(mDC, [label])
             modDC.update_metric(mACC, [label])
 
