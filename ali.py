@@ -69,8 +69,9 @@ def main():
 
     #mx.viz.plot_network(encoder, shape={'data': (batch_size, 3, 64, 64)}).view()
     #mx.viz.plot_network(decoder, shape={'rand': (batch_size, 128, 1, 1)}).view()
-    #mx.viz.plot_network(disc, shape={'data_x': (batch_size, 3, 64, 64), 'data_z': (batch_size, 128, 1, 1)}).view()
+    mx.viz.plot_network(disc, shape={'data_x': (batch_size, 3, 64, 64), 'data_z': (batch_size, 128, 1, 1)}).view()
 
+    return
     # =======================data================================
     imdb = loamBatch(name='loam').gt_imdb()
     X_train, X_test = get_maps(imdb)
