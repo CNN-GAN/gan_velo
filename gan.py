@@ -4,6 +4,7 @@ import logging
 import cv2
 import os
 import sys
+import cPickle
 from datetime import datetime
 sys.path.append('vgan')
 
@@ -25,23 +26,28 @@ def main():
     Z = 100
     lr = 0.0002
     beta1 = 0.5
-    ctx = mx.gpu(0)
+    ctx = mx.gpu(3)
     check_point = True
-    resume = True
+    resume = False
     modG_prefix = 'model/G'
     modD_prefix = 'model/D'
     modG_epoch  = 1
     modD_epoch  = 1
 
     symG, symD = make_dcgan_sym(ngf, ndf, nc)
+    if not resume:
+        with open('model/symD.json', 'wb') as f:
+            cPickle.dump(symD.tojson(), f, cPickle.HIGHEST_PROTOCOL)
+        with open('model/symG.json', 'wb') as f:
+            cPickle.dump(symG.tojson(), f, cPickle.HIGHEST_PROTOCOL)
+    else:
+        print 'Load model G from ', modG_prefix, ' epoch ', modG_epoch
+        print 'Load model D from ', modD_prefix, ' epoch ', modD_epoch
+
     #print symD.tojson()
     #mx.viz.plot_network(symG, shape={'rand': (batch_size, 100, 1, 1)}).view()
     mx.viz.plot_network(symD, shape={'data': (batch_size, nc, 64, 64)}).view()
 
-    print 'Load model G from ', modG_prefix, ' epoch ', modG_epoch
-    print 'Load model D from ', modD_prefix, ' epoch ', modD_epoch
-    
-    return
     # =======================data================================
     imdb = loamBatch(name='loam').gt_imdb()
     X_train, X_test = get_maps(imdb)
@@ -81,7 +87,7 @@ def main():
         modD.init_params(initializer=mx.init.Normal(0.02))
 
     modD.init_optimizer(
-        optimizer='adam',
+        optimizer='sgd',
         optimizer_params={
             'learning_rate': lr,
             'wd': 0.,
@@ -116,7 +122,7 @@ def main():
     stamp = datetime.now().strftime('%Y_%m_%d-%H_%M')
 
     # ==================train======================
-    for epoch in range(10000):
+    for epoch in range(1000):
         train_iter.reset()
         for t, batch in enumerate(train_iter):
             rbatch = rand_iter.next()

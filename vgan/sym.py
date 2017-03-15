@@ -8,18 +8,23 @@ def make_dcgan_sym(ngf, ndf, nc, no_bias=True, fix_gamma=True, eps=1e-5 + 1e-12)
     gbn1 = BatchNorm(g1, name='gbn1', fix_gamma=fix_gamma, eps=eps)
     gact1 = mx.sym.Activation(gbn1, name='gact1', act_type='relu')
 
-    g2 = mx.sym.Deconvolution(gact1, name='g2', kernel=(4,4), stride=(2,2), pad=(1,1), num_filter=ngf*4, no_bias=no_bias)
+    g2 = mx.sym.Deconvolution(gact1, name='g2', kernel=(4,4), stride=(2,2), pad=(1,1), num_filter=ngf*16, no_bias=no_bias)
     gbn2 = BatchNorm(g2, name='gbn2', fix_gamma=fix_gamma, eps=eps)
     gact2 = mx.sym.Activation(gbn2, name='gact2', act_type='relu')
 
-    g3 = mx.sym.Deconvolution(gact2, name='g3', kernel=(4,4), stride=(2,2), pad=(1,1), num_filter=ngf*2, no_bias=no_bias)
+    g3 = mx.sym.Deconvolution(gact2, name='g3', kernel=(4,4), stride=(2,2), pad=(1,1), num_filter=ngf*4, no_bias=no_bias)
     gbn3 = BatchNorm(g3, name='gbn3', fix_gamma=fix_gamma, eps=eps)
     gact3 = mx.sym.Activation(gbn3, name='gact3', act_type='relu')
 
-    g4 = mx.sym.Deconvolution(gact3, name='g4', kernel=(4,4), stride=(2,2), pad=(1,1), num_filter=ngf, no_bias=no_bias)
+    g4 = mx.sym.Deconvolution(gact3, name='g4', kernel=(4,4), stride=(2,2), pad=(1,1), num_filter=ngf*2, no_bias=no_bias)
     gbn4 = BatchNorm(g4, name='gbn4', fix_gamma=fix_gamma, eps=eps)
     gact4 = mx.sym.Activation(gbn4, name='gact4', act_type='relu')
 
+    '''
+    g5 = mx.sym.Deconvolution(gact4, name='g5', kernel=(4,4), stride=(2,2), pad=(1,1), num_filter=ngf, no_bias=no_bias)
+    gbn5 = BatchNorm(g5, name='gbn5', fix_gamma=fix_gamma, eps=eps)
+    gact5 = mx.sym.Activation(gbn5, name='gact5', act_type='relu')
+    '''
     g5 = mx.sym.Deconvolution(gact4, name='g5', kernel=(4,4), stride=(2,2), pad=(1,1), num_filter=nc, no_bias=no_bias)
     gout = mx.sym.Activation(g5, name='gact5', act_type='tanh')
 

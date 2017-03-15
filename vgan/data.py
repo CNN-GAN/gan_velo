@@ -4,16 +4,20 @@ import os
 import cPickle
 import cv2
 
-def get_maps(imdb):
-    maps = imdb
-    np.random.seed(1234)
-    p = np.random.permutation(len(maps))
-    X = np.array(maps)
-    X = X[p]
-    X = np.asarray([cv2.resize(x, (64, 64)) for x in X])
+img_len = 64
 
+def get_maps(imdb, random=True):
+    maps = imdb
+    X = np.array(maps)
+    if random:
+        np.random.seed(1234)
+        p = np.random.permutation(len(maps))
+        X = X[p]
+    X = np.asarray([cv2.resize(x, (img_len, img_len)) for x in X])
+
+    # change to [-1, 1]
     X = X.astype(np.float32)/(255.0/2) - 1.0
-    X = X.reshape((-1, 1, 64, 64))
+    X = X.reshape((-1, 1, img_len, img_len))
     X = np.tile(X, (1, 3, 1, 1))
     X_train = X[:800]
     X_test  = X[800:]
